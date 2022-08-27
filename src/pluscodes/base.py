@@ -60,6 +60,9 @@ class Base:
     # First place value of the longitude grid (if the last place is 1).
     GRID_LON_FIRST_PLACE_VALUE = GRID_COLUMNS ** (GRID_CODE_LENGTH - 1)
 
+    GRID_ROW_DIV = pow(GRID_ROWS, GRID_CODE_LENGTH)
+    GRID_COL_DIV = pow(GRID_COLUMNS, GRID_CODE_LENGTH)
+
     # Multiply latitude by this much to make it a multiple of the finest
     # precision.
     FINAL_LAT_PRECISION = PAIR_PRECISION * GRID_ROWS ** (

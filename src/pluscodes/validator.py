@@ -2,6 +2,8 @@ from .base import Base
 
 
 class Validator(Base):
+    """Perform validation operations on a Plus Code."""
+
     def is_valid(self, code: str) -> bool:
         """
         Determines if a Plus code is valid.

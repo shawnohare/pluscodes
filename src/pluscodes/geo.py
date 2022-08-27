@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from types import ClassMethodDescriptorType
 from typing import Dict, Tuple
 
 
@@ -31,12 +30,10 @@ class Area:
     Attributes:
         sw: The southwest (low) coordinates.
         ne: The northeast (high) coordinates.
-        size: The unpadded code length.
     """
 
     sw: Point
     ne: Point
-    code_length: int
 
     def center(self) -> Point:
         """The center point of the Plus Code area."""
@@ -46,17 +43,14 @@ class Area:
 
     def dict(self) -> Dict[str, Dict[str, float]]:
         """Area as a dict."""
-        return {"sw": self.sw.dict(), "ne": self.ne.dict()}
+        return {
+            "sw": self.sw.dict(),
+            "ne": self.ne.dict(),
+            "center": self.center().dict(),
+        }
 
     def tuple(self) -> Tuple[Tuple[float, float], Tuple[float, float]]:
         """Return a tuple containing the Plus Ccode, Southwest point and Northeast
         point boundaries
         """
         return (self.sw.latlon(), self.ne.latlon())
-
-    @classmethod
-    def from_floats(cls, sw_lat: float, sw_lon: float, ne_lat: float, ne_lon: float):
-        """Alternative constructor"""
-        sw = Point(lat=round(sw_lat, 14), lon=round(sw_lon, 14))
-        ne = Point(lat=round(ne_lat, 14), lon=round(ne_lon, 14))
-        return cls(sw=sw, ne=ne)

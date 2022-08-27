@@ -1,10 +1,6 @@
 import math
-import re
-from dataclasses import dataclass
-from typing import Dict, Tuple
 
 from .base import Base
-from .types import Number
 
 
 class Encoder(Base):
@@ -34,7 +30,7 @@ class Encoder(Base):
         else:
             self._lat_precision = pow(20, -3) / pow(self.GRID_ROWS, code_length - 10)
 
-    def encode(self, latitude: Number, longitude: Number) -> str:
+    def encode(self, latitude: float, longitude: float) -> str:
         """
         Encode a location into an Plus Code.
 
@@ -64,6 +60,7 @@ class Encoder(Base):
         # that normalizes longitude.
         if longitude == 180:
             longitude = -180
+
         code = ""
 
         # TODO: Populate an array instead of a collection of string ops.
@@ -81,6 +78,7 @@ class Encoder(Base):
         lngVal = int(round((longitude + self.MAX_LON) * self.FINAL_LON_PRECISION, 6))
 
         # Compute the grid part of the code if necessary.
+        # TODO: Some of these computations can be made at init.
         if self.code_length > self.PAIR_CODE_LENGTH:
             for _ in range(self.MAX_CODE_LENGTH - self.PAIR_CODE_LENGTH):
                 latDigit = latVal % self.GRID_ROWS
@@ -93,8 +91,8 @@ class Encoder(Base):
                 latVal //= self.GRID_ROWS
                 lngVal //= self.GRID_COLUMNS
         else:
-            latVal //= pow(self.GRID_ROWS, self.GRID_CODE_LENGTH)
-            lngVal //= pow(self.GRID_COLUMNS, self.GRID_CODE_LENGTH)
+            latVal //= self.GRID_ROW_DIV
+            lngVal //= self.GRID_COL_DIV
 
         # Compute the pair section of the code.
         base = self.ENCODING_BASE
@@ -118,8 +116,19 @@ class Encoder(Base):
         return code
 
 
+# Pre-init all possible encoders.
+Encoders = {
+    **{i: Encoder(i) for i in range(10, 16)},
+    **{i: Encoder(i) for i in range(2, 10, 2)},
+}
+
+
 def encode(lat: float, lon: float, code_length: int = 10) -> str:
     """Create an Encoder instance that encodes Plus Codes using the
     input code length.
     """
-    return Encoder(code_length).encode(lat, lon)
+    try:
+        encoder = Encoders[code_length]
+    except KeyError:
+        raise ValueError("code_length must be between 6 and 15, inclusive.")
+    return encoder.encode(lat, lon)

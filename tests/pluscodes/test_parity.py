@@ -1,11 +1,15 @@
+"""Test that this implementation and the reference match.
+"""
 import random
 
 import pytest
 
 from pluscodes import Decoder, Encoder
-from pluscodes.vendored import olc
+from pluscodes import openlocationcode as olc
 
 
+# TODO: This just serves as a very basic sanity check. We should port over
+# the google test suite as well.
 class TestPlusCodeEqualsVendoredCode:
     """Test Whether the Plus Code values values returned from this
     package are the same as those produced by the reference implementation.

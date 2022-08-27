@@ -45,7 +45,8 @@ Examples:
     recoverNearest('8F+6X', 47.4, 8.6)
 """
 from .code import PlusCode
-from .decoder import Decoder
-from .encoder import Encoder
+from .decoder import Decoder, decode
+from .encoder import Encoder, encode
 from .geo import Area, Point
 from .transformer import Transformer
+from .validator import Validator

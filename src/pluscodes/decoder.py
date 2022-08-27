@@ -85,5 +85,13 @@ class Decoder(Base):
 
         sw = Point(lat=round(lat, 14), lon=round(lng, 14))
         ne = Point(lat=round(lat + latPrecision, 14), lon=round(lng + lngPrecision, 14))
-        area = Area(sw=sw, ne=ne, code_length=len(code))
+        area = Area(sw=sw, ne=ne)
         return area
+
+
+def decode(code: str) -> Area:
+    """Decode a valid, full Plus Code.
+
+    No explicit validation checks are performed.
+    """
+    return Decoder().decode(code)

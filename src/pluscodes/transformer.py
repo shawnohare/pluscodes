@@ -6,7 +6,6 @@ from .base import Base
 from .decoder import Decoder
 from .encoder import Encoder
 from .geo import Point
-from .types import Number
 from .validator import Validator
 
 
@@ -42,7 +41,7 @@ class Transformer(Base):
     encoder = Encoder()
     decoder = Decoder()
 
-    def lenghten(self, code: str, ref: Point | Tuple[Number, Number]) -> str:
+    def lenghten(self, code: str, ref: Point | Tuple[float, float]) -> str:
         """
         Recover the nearest matching code to a specified location.
         Given a short code of between four and seven characters, this recovers
@@ -106,7 +105,7 @@ class Transformer(Base):
         # return self.encoder.encode(c_lat, c_lon, codeArea.code_length)
         return self.encoder.encode(c_lat, c_lon)
 
-    def shorten(self, code, ref: Point | Tuple[Number, Number]) -> str:
+    def shorten(self, code, ref: Point | Tuple[float, float]) -> str:
         """
         Remove characters from the start of an OLC code.
         This uses a reference location to determine how many initial characters
