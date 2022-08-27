@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=63.0", "pip>=22", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pluscodes"
+description = "Compute Plus Codes (Open Location Codes)."
+readme = "README.md"
+keywords = ["plus code", "open location code", "geocode", "location"]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    # "Programming Language :: Python :: 3.11",
+]
+requires-python = '>=3.10'
+dependencies = []
+version = "0.1.0"
+# dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = [
+    "black==22.3.0",
+    "pytest==7.1.1",
+    "isort==5.8.0",
+    "coverage==6.4",
+    "pytest-cov==3.0.0",
+    "pylintv==2.15.0",
+]
+
+# [project.scripts]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+pluscodes = ['*.sql', '*.js', '*.csv']
+
+# [tools.setuptools.dynamic]
