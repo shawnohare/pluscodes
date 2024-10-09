@@ -42,7 +42,7 @@ class PlusCode:
         # Replace the default encoder with another if a customized code
 
         if isinstance(val, (float, int)) and isinstance(val2, (float, int)):
-            self.code = self.encode(float(val), float(val2))
+            self.code = encode(float(val), float(val2))
         elif isinstance(val, str):
             self.code = val.upper()
         elif isinstance(val, tuple):
