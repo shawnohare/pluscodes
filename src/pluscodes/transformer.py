@@ -25,13 +25,7 @@ def normalize_lon(lon: float) -> float:
     Args:
       longitude: A longitude in signed decimal degrees.
     """
-    if lon < -180:
-        while lon < -180:
-            lon += 360
-    elif lon > 180:
-        while lon >= 180:
-            lon -= 360
-    return lon
+    return (lon + 180) % 360 - 180
 
 
 class Transformer(Base):
@@ -78,6 +72,7 @@ class Transformer(Base):
         # Use the reference location to pad the supplied short code and decode it.
         if isinstance(ref, tuple):
             ref = Point(*ref)
+        ref = Point(normalize_lat(ref.lat), normalize_lon(ref.lon))
 
         area = self.decoder.decode(
             self.encoder.encode(ref.lat, ref.lon)[0:paddingLength] + code
@@ -102,8 +97,10 @@ class Transformer(Base):
         elif ref.lon - halfResolution > c_lon:
             c_lon += resolution
 
-        # return self.encoder.encode(c_lat, c_lon, codeArea.code_length)
-        return self.encoder.encode(c_lat, c_lon)
+        # Keep every digit of the short code: the recovered code has the
+        # padding digits plus all digits of the short code.
+        code_length = paddingLength + len(code) - 1
+        return Encoder(code_length).encode(c_lat, c_lon)
 
     def shorten(self, code, ref: Point | Tuple[float, float]) -> str:
         """
@@ -135,6 +132,7 @@ class Transformer(Base):
 
         if isinstance(ref, tuple):
             ref = Point(*ref)
+        ref = Point(normalize_lat(ref.lat), normalize_lon(ref.lon))
 
         code = code.upper()
         area = self.decoder.decode(code)
