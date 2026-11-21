@@ -58,3 +58,19 @@ class TestPlusCodeEqualsVendoredCode:
         """
         encoder = Encoder()
         assert encoder.encode(lat, lon) == olc.encode(lat, lon)
+
+
+@pytest.mark.parametrize(
+    "lat,lon,code_length",
+    [
+        (65.0, -407.7848844, 12),
+        (48.853125, 468.3791795, 8),
+        (-90, 253.1957942, 6),
+        (89.9999999, 531.6863771, 8),
+        (95.0, 10.0, 10),
+        (-95.0, -190.0, 10),
+        (20.0, 540.0, 10),
+    ],
+)
+def test_encode_normalizes_out_of_range_values(lat: float, lon: float, code_length: int):
+    assert Encoder(code_length).encode(lat, lon) == olc.encode(lat, lon, code_length)

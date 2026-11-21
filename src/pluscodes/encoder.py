@@ -51,15 +51,15 @@ class Encoder(Base):
         # TODO: Is there a way to easily compute the boundary while encoding
         # instead of performing a code / decode op?
 
+        # Clip the latitude and normalize the longitude into [-180, 180),
+        # as the source implementation does.
+        latitude = min(self.MAX_LAT, max(-self.MAX_LAT, latitude))
+        longitude = (longitude + self.MAX_LON) % (2 * self.MAX_LON) - self.MAX_LON
+
         # Latitude 90 needs to be adjusted to be just less, so the returned code
         # can also be decoded.
         if latitude == 90:
             latitude = latitude - self._lat_precision
-
-        # The source implementation maps 180 -> -180 via the function
-        # that normalizes longitude.
-        if longitude == 180:
-            longitude = -180
 
         code = ""
 
